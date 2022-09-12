@@ -1,4 +1,5 @@
 ﻿using ChatExtensions;
+using ChatModelLibrary;
 using System.ComponentModel;
 using System.Net.Sockets;
 using System.Runtime.CompilerServices;
@@ -8,9 +9,11 @@ namespace ChatClient
 {
     public class ClientModel : INotifyPropertyChanged
     {
-        private TcpClient _socket;
-        private string _messageBoard;
-        public string MessageBoard
+        #region Properties and Variables
+        private TcpClient? _socket;
+
+        private string? _messageBoard;
+        public string? MessageBoard
         {
             get { return _messageBoard; }
             set { 
@@ -19,8 +22,8 @@ namespace ChatClient
             }
         }
 
-        private string _currentMessage = "";
-        public string CurrentMessage
+        private string? _currentMessage = "";
+        public string? CurrentMessage
         {
             get { return _currentMessage; }
             set { 
@@ -29,55 +32,85 @@ namespace ChatClient
             }
         }
 
+        private string? _user = "";
+        public string? User
+        {
+            get { return _user; }
+            set { 
+                _user = value; 
+                NotifyPropertyChanged();
+                NotifyPropertyChanged("UserSet");
+            }
+        }
+
         public bool Connected
         {
             get { return _socket != null && _socket.Connected; }
         }
 
+        public bool UserSet
+        {
+            get => string.IsNullOrWhiteSpace(_user); 
+        }
+        #endregion
+
+        public ClientModel()
+        {
+            User = null;
+            _socket = null;
+            _currentMessage = null;
+            _messageBoard = null;
+        }
+
         public void Connect()
         {
-            if (string.IsNullOrEmpty(_currentMessage))
+            if (string.IsNullOrEmpty(_user))
             {
                 MessageBoard = "You must enter text identfying yourself " +
-                    "in the Message before you click connect.";
+                    "in the user box before you click connect.";
                 return;
             }
             _socket = new TcpClient("127.0.0.1", 8888);
             NotifyPropertyChanged("Connected");
-            Send();
-            _messageBoard = "Welcome: " + _currentMessage;
+            SendHello();
+            _messageBoard = _currentMessage;
             var thread = new Thread(GetMessage);
             thread.Start();
         }
 
         public void GetMessage()
         {
+            if (_socket == null) return;
             while (true)
             {
-                string msg = _socket.ReadString();
-                MessageBoard += "\r\n" + msg;
+                ChatMessage msg = _socket.ReadMessage();
+                MessageBoard += msg.ToString() + "\r\n";
             }
+        }
+
+        public void SendHello()
+        {
+            if (_socket == null || _user == null) return;
+            _socket.WriteMessage(new ChatMessage(_user, $"{_user} has joined the chat."));
         }
 
         public void Send()
         {
-            _socket.WriteString(_currentMessage + "\0");
+            if (_socket == null || _user == null || _currentMessage == null) return;
+            _socket.WriteMessage(new ChatMessage(_user,_currentMessage));
+            CurrentMessage = "";
         }
 
-
-
         #region INotifyPropertyChanged Implementation
+        public event PropertyChangedEventHandler? PropertyChanged;
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private void NotifyPropertyChanged([CallerMemberName] string prop = null)
+        private void NotifyPropertyChanged([CallerMemberName] string? prop = null)
         {
             if (PropertyChanged != null)
             {
                 PropertyChanged(this, new PropertyChangedEventArgs(prop));
             }
         }
-
         #endregion
     }
 }

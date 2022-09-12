@@ -1,4 +1,5 @@
 ﻿using ChatExtensions;
+using ChatModelLibrary;
 using System.Net.Sockets;
 
 
@@ -9,7 +10,7 @@ namespace Chat2022
         private TcpClient clientSocket;
         private string clientName;
 
-        public void StartClient(TcpClient client, string name)
+        public HandleClient(TcpClient client, string name)
         {
             clientSocket = client;
             clientName = name;
@@ -23,9 +24,9 @@ namespace Chat2022
             {
                 try
                 {
-                    string dataFromClient = clientSocket.ReadString();
-                    Program.Broadcast(dataFromClient, clientName, true);
-                    Console.WriteLine(clientName + " said: " + dataFromClient);
+                    ChatMessage? dataFromClient = clientSocket.ReadMessage();
+                    Program.Broadcast(dataFromClient);
+                    Console.WriteLine(dataFromClient);
                 }
                 catch (Exception ex)
                 {

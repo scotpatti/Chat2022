@@ -5,22 +5,22 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ChatClient"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="492" Width="800">
     <Window.DataContext>
         <local:ClientViewModel />
     </Window.DataContext>
     <Grid>
-        <Label Content="Message:" HorizontalAlignment="Left"
-               Margin="10,0,0,57"
+        <TextBlock Text="Message:" HorizontalAlignment="Left"
+               Margin="10,0,0,64"
                Width="58"
-               Height="26"
+               Height="17"
                VerticalAlignment="Bottom" />
-        <TextBox Height="70" 
+        <TextBox Height="73" 
                  Margin="72,0,10,8"
                  TextWrapping="Wrap"
                  Text="{Binding Message}"
                  VerticalAlignment="Bottom" />
-        <TextBox Margin="10,10,10,83"
+        <TextBox Margin="10,10,10,109"
                  TextWrapping="Wrap"
                  Text="{Binding MessageBoard}"
                  ScrollViewer.CanContentScroll="True"
@@ -39,5 +39,13 @@
                 VerticalAlignment="Bottom"
                 Width="58"
                 Height="20" />
+        <TextBox HorizontalAlignment="Left" 
+                 Margin="73,0,0,86" 
+                 TextWrapping="Wrap" 
+                 Text="{Binding User, UpdateSourceTrigger=PropertyChanged}" Width="120"
+                 IsEnabled="{Binding UserEnabled}" Height="18" VerticalAlignment="Bottom"/>
+        <TextBlock Text="User:" HorizontalAlignment="Left"
+            Margin="10,0,0,86"
+            Width="58" Height="18" VerticalAlignment="Bottom" />
     </Grid>
 </Window>
