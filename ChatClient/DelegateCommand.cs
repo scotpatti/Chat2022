@@ -8,7 +8,7 @@ namespace ChatClient
         private readonly Action<T> _execute;
         private readonly Predicate<T> _canExecute;
 
-        public event EventHandler CanExecuteChanged;
+        public event EventHandler? CanExecuteChanged;
 
         public DelegateCommand(Action<T> execute, Predicate<T> canExecute)
         {
@@ -16,12 +16,12 @@ namespace ChatClient
             _canExecute = canExecute;
         }
 
-        public bool CanExecute(object parameter)
+        public bool CanExecute(object? parameter)
         {
             return _canExecute == null || _canExecute((T)parameter);
         }
 
-        public void Execute(object parameter)
+        public void Execute(object? parameter)
         {
             _execute((T)parameter);
         }
