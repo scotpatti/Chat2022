@@ -19,7 +19,7 @@ public static class Program
             try
             {
                 var clientSocket = serverSocket.AcceptTcpClient();
-                ChatMessage data = clientSocket.ReadMessage();
+                ChatMessage data = clientSocket.ReadMessage<ChatMessage>();
                 ClientList.Add(data.User, clientSocket);
                 Broadcast(data);
                 Console.WriteLine(data.User + " joined the chatroom.");

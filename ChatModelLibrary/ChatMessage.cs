@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using ChatContracts;
+using System.Text.Json;
 
 namespace ChatModelLibrary
 {

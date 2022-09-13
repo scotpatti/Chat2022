@@ -24,7 +24,7 @@ namespace Chat2022
             {
                 try
                 {
-                    ChatMessage? dataFromClient = clientSocket.ReadMessage();
+                    ChatMessage? dataFromClient = clientSocket.ReadMessage<ChatMessage>();
                     Program.Broadcast(dataFromClient);
                     Console.WriteLine(dataFromClient);
                 }

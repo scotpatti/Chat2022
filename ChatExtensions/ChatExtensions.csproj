@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ChatModelLibrary\ChatModelLibrary.csproj" />
+    <ProjectReference Include="..\ChatContracts\ChatContracts.csproj" />
   </ItemGroup>
 
 </Project>

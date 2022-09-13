@@ -3,7 +3,6 @@ using ChatModelLibrary;
 using System.ComponentModel;
 using System.Net.Sockets;
 using System.Runtime.CompilerServices;
-using System.Threading;
 
 namespace ChatClient
 {
@@ -83,7 +82,7 @@ namespace ChatClient
             if (_socket == null) return;
             while (true)
             {
-                ChatMessage msg = _socket.ReadMessage();
+                ChatMessage msg = _socket.ReadMessage<ChatMessage>();
                 MessageBoard += msg.ToString() + "\r\n";
             }
         }

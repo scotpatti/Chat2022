@@ -1,4 +1,4 @@
-﻿using ChatModelLibrary;
+﻿using ChatContracts;
 using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
@@ -7,7 +7,7 @@ namespace ChatExtensions
 {
     public static class Extensions
     {
-        public static ChatMessage ReadMessage(this TcpClient client)
+        public static T ReadMessage<T>(this TcpClient client) where T : class, IToJson
         {
             try
             {
@@ -15,17 +15,17 @@ namespace ChatExtensions
                 var bytes = new byte[client.ReceiveBufferSize];
                 stream.Read(bytes, 0, bytes.Length);
                 var msg = Encoding.ASCII.GetString(bytes);
-                var stmsg = JsonSerializer.Deserialize<ChatMessage>(msg.Substring(0, msg.IndexOf('\0')));
+                var stmsg = JsonSerializer.Deserialize<T>(msg.Substring(0, msg.IndexOf('\0')));
                 if (stmsg != null) return stmsg;
                 throw new Exception($"Could not parse {msg}");
             } catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                return new ChatMessage("", "");
+                return null;
             }
         }
 
-        public static void WriteMessage(this TcpClient client, ChatMessage msg)
+        public static void WriteMessage<T>(this TcpClient client, T msg) where T : class, IToJson
         {
             try
             {
