@@ -10,7 +10,7 @@ namespace Chat2022
         private TcpClient clientSocket;
         private string clientName;
 
-        public void StartClient(TcpClient client, string name)
+        public HandleClient(TcpClient client, string name)
         {
             clientSocket = client;
             clientName = name;
